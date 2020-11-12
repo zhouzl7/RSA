@@ -18,8 +18,7 @@ private:
 	void clear();
 	bool checkStr(const string& str);
 	int compare(const BigInt& other) const;
-	static uint estimateQuotient(const BigInt& a, const BigInt& b);
-	static uint getMaxCycle(const BigInt& a, const BigInt& b);
+	static uint _div(BigInt& a, const BigInt& b);
 public:
 	BigInt();
 	BigInt(const uint num);
@@ -42,6 +41,8 @@ public:
 	BigInt operator-(const BigInt& other) const;
 	BigInt operator*(const BigInt& other) const;
 	BigInt operator/(const BigInt& other) const;
+	BigInt operator%(const BigInt& other) const;
 
+	BigInt div(const BigInt& other, BigInt& ca) const;
 	string toString() const;
 };

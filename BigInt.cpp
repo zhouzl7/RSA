@@ -32,9 +32,9 @@ bool BigInt::checkStr(const string& str) {
 }
 
 void BigInt::operator=(const string& str) {
-	if (!checkStr(str)) {
+	/*if (!checkStr(str)) {
 		throw "please input valid string that only allow '0'-'9'.";
-	}
+	}*/
 	int len = str.length();
 	while (len >= BASE_LEN) {
 		this->_data.push_back(stoi(str.substr(len - BASE_LEN, BASE_LEN)));
@@ -93,16 +93,6 @@ bool BigInt::operator<=(const BigInt& other) const {
 	return this->compare(other) <= 0;
 }
 
-string BigInt::toString() const {
-	int size = this->_data.size();
-	string result = to_string(this->_data[size-1]);
-	for (int i = size - 2; i >= 0; i--) {
-		char str[10];
-		sprintf_s(str, FORMAT_STR, this->_data[i]);
-		result = result + str;
-	}
-	return result;
-}
 
 BigInt BigInt::operator+(const BigInt& other) const {
 	int size1 = this->_data.size();
@@ -220,6 +210,18 @@ BigInt BigInt::operator*(const BigInt& other) const {
 }
 
 BigInt BigInt::operator/(const BigInt& other) const {
+	BigInt ca;
+	return this->div(other, ca);
+}
+
+BigInt BigInt::operator%(const BigInt& other) const {
+	BigInt ca;
+	this->div(other, ca);
+	return ca;
+}
+
+BigInt BigInt::div(const BigInt& other, BigInt& ca) const
+{
 	//假设除数一定合法
 	//假设被除数一定大于除数
 	/*if (*this < other)
@@ -230,57 +232,52 @@ BigInt BigInt::operator/(const BigInt& other) const {
 
 	uint quot = 0;
 	BigInt result;
-	BigInt temp;
 
 	for (int i = size1 - size2 + 1; i < size1; i++) {
-		temp._data.push_back(this->_data[i]);
+		ca._data.push_back(this->_data[i]);
 	}
 	for (int i = size1 - size2; i >= 0; i--) {
-		temp._data.insert(temp._data.begin(), this->_data[i]);
-		temp.clear();
-		quot = getMaxCycle(temp, other);
-		temp = temp - other * quot;
+		ca._data.insert(ca._data.begin(), this->_data[i]);
+		ca.clear();
+		quot = _div(ca, other);
 		result._data.insert(result._data.begin(), quot);
 	}
 	result.clear();
 	return result;
 }
 
-uint BigInt::getMaxCycle(const BigInt& a, const BigInt& b) {
-	BigInt tempA = a;
-	BigInt tempB = b;
-	uint temp;
+uint BigInt::_div(BigInt& a, const BigInt& b) {
+	if (a < b)
+		return 0;
 	uint result = 0;
-	bool flag = true;
-
-	while(tempA >= tempB) {
-		temp = estimateQuotient(tempA, tempB);
-		tempA = tempB * temp - tempA;
-		result = flag ? (result + temp) : (result - temp);
-		flag = !flag;
+	int size2 = b._data.size();
+	while(a >= b) {
+		int size1 = a._data.size();
+		uint64 head_a = a._data[size1 - 1];
+		uint64 head_b = b._data[size2 - 1];
+		if (head_a < head_b)
+			head_a = head_a * BASE_VAL + a._data[size1 - 2];
+		uint remiander = head_a % head_b;
+		if (remiander == 0) {
+			uint temp = head_a / head_b;
+			result += temp;
+			a = a - b * temp;
+			continue;
+		}
+		uint temp = head_a / (head_b + 1);
+		result += temp;
+		a = a - b * temp;
 	}
-	while (result > 0 && (tempB * result) > a)
-		result--;
 	return result;
 }
 
-uint BigInt::estimateQuotient(const BigInt& a, const BigInt& b) {
-	int sizeA = a._data.size();
-	int sizeB = b._data.size();
-	uint64 valA, valB;
-	if (sizeA == sizeB) {
-		if (sizeA > 1) {
-			valA = (uint64)a._data[sizeA - 1] * BASE_VAL + a._data[sizeA - 2];
-			valB = (uint64)b._data[sizeB - 1] * BASE_VAL + b._data[sizeB - 2];
-		}
-		else {
-			valA = (uint64)a._data[sizeA - 1];
-			valB = (uint64)b._data[sizeB - 1];
-		}
+string BigInt::toString() const {
+	int size = this->_data.size();
+	string result = to_string(this->_data[size - 1]);
+	for (int i = size - 2; i >= 0; i--) {
+		char str[10];
+		sprintf_s(str, FORMAT_STR, this->_data[i]);
+		result = result + str;
 	}
-	else {
-		valA = (uint64)a._data[sizeA - 1] * BASE_VAL + a._data[sizeA - 2];
-		valB = (uint64)b._data[sizeB - 1];
-	}
-	return (uint)(valA / valB);
+	return result;
 }
