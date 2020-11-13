@@ -1,4 +1,4 @@
-#include"BigInt.h"
+#include "BigInt.h"
 
 BigInt::BigInt() {
 }
@@ -260,6 +260,9 @@ uint BigInt::_div(BigInt& a, const BigInt& b) {
 		uint remiander = head_a % head_b;
 		if (remiander == 0) {
 			uint temp = head_a / head_b;
+			while (b * temp > a) {
+				temp--;
+			}
 			result += temp;
 			a = a - b * temp;
 			continue;
