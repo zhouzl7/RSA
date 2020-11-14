@@ -223,9 +223,10 @@ BigInt BigInt::operator%(const BigInt& other) const {
 BigInt BigInt::div(const BigInt& other, BigInt& ca) const
 {
 	//假设除数一定合法
-	//假设被除数一定大于除数
-	/*if (*this < other)
-		return BigInt(0);*/
+	if (*this < other) {
+		ca = *this;
+		return BigInt(0);
+	}
 
 	int size1 = this->_data.size();
 	int size2 = other._data.size();
@@ -255,9 +256,19 @@ uint BigInt::_div(BigInt& a, const BigInt& b) {
 		int size1 = a._data.size();
 		uint64 head_a = a._data[size1 - 1];
 		uint64 head_b = b._data[size2 - 1];
-		if (head_a < head_b)
+		if (head_a <= head_b && size1 > 1)
 			head_a = head_a * BASE_VAL + a._data[size1 - 2];
-		uint remiander = head_a % head_b;
+		uint up = head_a / head_b;
+		uint down = head_a / (head_b + 1);
+		while (b * down > a) {
+			down = down / 2;
+		}
+		while (b * up > a) {
+			up = (up + down) / 2;
+		}
+		result += up;
+		a = a - b * up;
+		/*uint remiander = head_a % head_b;
 		if (remiander == 0) {
 			uint temp = head_a / head_b;
 			while (b * temp > a) {
@@ -269,7 +280,7 @@ uint BigInt::_div(BigInt& a, const BigInt& b) {
 		}
 		uint temp = head_a / (head_b + 1);
 		result += temp;
-		a = a - b * temp;
+		a = a - b * temp;*/
 	}
 	return result;
 }

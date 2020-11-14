@@ -56,10 +56,14 @@ BigInt RSA::modular_exp(BigInt a, BigInt e, const BigInt n)
 	while (e != 0) {
 		if (e % 2 == 1) {
 			//result = (result % n) * (a % n);
+			cout << result.toString() << endl;
+			cout << n.toString() << endl;
+			cout << a.toString() << endl;
 			result = result % n;
 			BigInt temp = a % n;
 			result = result * temp;
 		}
+		cout << e.toString() << endl << endl;
 		//a = (a * a) % n;
 		a = a % n;
 		a = a * a;
