@@ -67,10 +67,8 @@ int main()
 	//cout << a.div(b,c).toString() << endl;
 	//cout << c.toString() << endl;
 
-	
-
 	RSA rsa;
-	rsa.init(50);
+	rsa.init(78);
 	cout << rsa.p.toString() << endl;
 	cout << rsa.q.toString() << endl;
 	cout << rsa.N.toString() << endl;
