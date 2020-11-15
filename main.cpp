@@ -60,15 +60,27 @@ int main()
 	
 	my_assert();
 	BigInt a, b, c;
-	a = "2453426546546435654"; 
-	b = "28764535259006346816";
-	cout << a.div(b,c).toString() << endl;
-	cout << c.toString() << endl;
+	a = "65537"; 
+	b = "9435349541954342352345234654534536543252345343452346546543634500";
+	//c = a - b;
+	//cout << c.is_negative << " " << c.toString();
+	//cout << a.div(b,c).toString() << endl;
+	//cout << c.toString() << endl;
 
 	
 
 	RSA rsa;
-	//rsa.init(200);
-	BigInt prime("5");
-	cout << rsa.isPrime(prime, 5);
+	rsa.init(50);
+	cout << rsa.p.toString() << endl;
+	cout << rsa.q.toString() << endl;
+	cout << rsa.N.toString() << endl;
+	cout << rsa.phiN.toString() << endl;
+	cout << rsa.d.toString() << endl;
+	cout << ((rsa.d * rsa.e) % rsa.phiN).toString() << endl << endl;
+
+	BigInt plaintext, ciphertext;
+	plaintext = "12345678900";
+	ciphertext = rsa.encrypt(plaintext);
+	cout << ciphertext.toString() << endl;
+	cout << rsa.decrypt(ciphertext).toString();
 }

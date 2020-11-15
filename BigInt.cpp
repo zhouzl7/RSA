@@ -138,14 +138,17 @@ BigInt BigInt::operator+(const BigInt& other) const {
 
 BigInt BigInt::operator-(const BigInt& other) const {
 	// 假定 other 是较小数
-	/*if (*this <= other)
-		return BigInt(0);*/
+	BigInt result;
+	/*if (*this <= other) {
+		result = other.operator-(*this);
+		result.is_negative = true;
+		return result;
+	}*/
 	int size1 = this->_data.size();
 	int size2 = other._data.size();
 
 	uint diff = 0;
 	uint carry = 0;
-	BigInt result;
 
 	for (int i = 0; i < size2; i++) {
 		if (this->_data[i] < other._data[i] + carry) {

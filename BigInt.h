@@ -20,6 +20,7 @@ private:
 	int compare(const BigInt& other) const;
 	static uint _div(BigInt& a, const BigInt& b);
 public:
+	//bool is_negative = false;
 	BigInt();
 	BigInt(const uint num);
 	BigInt(const string& str);
