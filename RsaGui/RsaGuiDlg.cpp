@@ -117,12 +117,14 @@ void CRsaGuiDlg::OnBnClickedInit()
 	UpdateData();
 	buttonEncrypt.EnableWindow(0);
 	buttonDecrypt.EnableWindow(0);
+	buttonInit.EnableWindow(0);
 	rsa.init(_ttoi(digits));
 	N = rsa.N.toString().c_str();
 	d = rsa.d.toString().c_str();
 	p = rsa.p.toString().c_str();
 	q = rsa.q.toString().c_str();
 	buttonEncrypt.EnableWindow(1);
+	buttonInit.EnableWindow(1);
 	UpdateData(FALSE);
 }
 

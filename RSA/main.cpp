@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <cassert>
+#include <ctime>
 #include "BigInt.h"
 #include "RSA.h"
 using namespace std;
@@ -68,17 +69,28 @@ int main()
 	//cout << c.toString() << endl;
 
 	RSA rsa;
-	rsa.init(78);
-	cout << rsa.p.toString() << endl;
-	cout << rsa.q.toString() << endl;
-	cout << rsa.N.toString() << endl;
-	cout << rsa.phiN.toString() << endl;
-	cout << rsa.d.toString() << endl;
-	cout << ((rsa.d * rsa.e) % rsa.phiN).toString() << endl << endl;
+	uint digits;
+	cout << "请输入模N位数（十进制位数）：";
+	cin >> digits;
+	cout << "RSA init..." << endl;
+	clock_t start = clock();
+	rsa.init(digits);
+	clock_t end = clock();
+	double endtime = (double)(end - start) / CLOCKS_PER_SEC;
+	cout << "Total time:" << endtime * 1000 << "ms" << endl;	//ms为单位
+	cout << "素数p：" << rsa.p.toString() << endl;
+	cout << "素数q：" << rsa.q.toString() << endl;
+	cout << "公钥N (e=65537)：" << rsa.N.toString() << endl;
+	//cout << "欧拉数phiN：" << rsa.phiN.toString() << endl;
+	cout << "密钥d：" << rsa.d.toString() << endl << endl;
+	//cout << ((rsa.d * rsa.e) % rsa.phiN).toString() << endl << endl;
 
 	BigInt plaintext, ciphertext;
-	plaintext = "12345678900";
+	string str;
+	cout << "请输入明文（10进制数字串）：";
+	cin >> str;
+	plaintext = str;
 	ciphertext = rsa.encrypt(plaintext);
-	cout << ciphertext.toString() << endl;
-	cout << rsa.decrypt(ciphertext).toString();
+	cout << "密文：" << ciphertext.toString() << endl << endl;
+	cout << "解密：" << rsa.decrypt(ciphertext).toString() << endl << endl;
 }
